@@ -1,4 +1,6 @@
 package com.cybertektraining.api;
 
-public class UserApi {
+public class StudentAPI {
+
+
 }
