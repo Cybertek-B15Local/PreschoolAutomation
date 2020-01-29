@@ -5,6 +5,7 @@ import com.cybertektraining.pojos.Address;
 import com.cybertektraining.pojos.Company;
 import com.cybertektraining.pojos.Contact;
 import com.cybertektraining.pojos.Student;
+import com.cybertektraining.utilities.FileUtilities;
 import com.google.gson.Gson;
 import io.restassured.response.Response;
 import org.junit.Assert;
@@ -12,10 +13,10 @@ import org.junit.Test;
 
 import java.io.FileReader;
 import java.io.IOException;
+
 import static io.restassured.RestAssured.*;
 
 public class StudentUnitTests {
-
 
 
     @Test
@@ -42,13 +43,13 @@ public class StudentUnitTests {
     }
 
     @Test
-    public void test2(){
+    public void test2() {
         Address address = new Address("McLean", "Virginia", "7925 Jones Branch Dr #3300", 7925);
         Company company = new Company(address, "02/02/2020", "Cybertek", "SDET");
         Contact contact = new Contact("sdet@email.com", "454-323-2341", "7925 Jones Branch Dr #3300");
         Student student = new Student("123456", 11, "01/06/1990", company, contact,
                 "Robert", "Male", "11/26/2017",
-                "Dzagoev", "MBA","AP-45", "1111", "Math");
+                "Dzagoev", "MBA", "AP-45", "1111", "Math");
 
         Response response = StudentAPI.addStudent(student);
 
@@ -56,8 +57,16 @@ public class StudentUnitTests {
 
         response.prettyPrint();
     }
-    @Test
-    public void test3(){
 
+    @Test
+    public void test3() {
+        //path to the student JSON file
+        String path = System.getProperty("user.dir") + "/student.json";
+        //deserialize JSON object into student POJO
+        Student student = FileUtilities.getUserFromJSON(path);
+        //POST new student
+        Response response = StudentAPI.addStudent(student);
+        //assert status code
+        Assert.assertEquals(200, response.getStatusCode());
     }
 }
